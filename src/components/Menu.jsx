@@ -12,11 +12,6 @@ export default function Menu(){
     const [restaurantInfo, setRestaurantInfo] = useState([]);
     const [menuInfo, setMenuInfo] = useState([]);
 
-    //testing useffect after wrapping it becoz of async function being used in it
-    // const fetchData = () => {
-    //     fetchMenu();
-    // } 
-
     //useEffect uses synchronous function --> never use async function as it may delay the value updation --> if used use a wrapper function to call it again
     //if using async function wrap it with other fetch.
     useEffect(() => {
@@ -45,11 +40,7 @@ export default function Menu(){
             console.log("Carousel Absent = ", menujson?.data?.cards[MENU_INDEX]?.groupedCard?.cardGroupMap?.REGULAR?.cards[1]?.card?.card?.itemCards));
     }   
     
-    //as restaurantInfo was initialized inside an empty array, so destructuring it doesnt result in error, hence forwards to next updation cycle after useEffect was called
-    const {name, avgRating, costForTwoMessage, totalRatingsString, cuisines, areaName} = restaurantInfo;  
-    // console.log("sla= ", sla, restaurantInfo);
-    //we cannot destruction undefined so, destrunction sla gives an error
-    // const {minDeliveryTime, maxDeliveryTime} = sla;   
+    const {name, avgRating, costForTwoMessage, totalRatingsString, cuisines, areaName} = restaurantInfo;   
 
 
     return ((restaurantInfo.length === 0 && menuInfo.length === 0 )? <Exocard /> : 
@@ -72,11 +63,8 @@ export default function Menu(){
                         <div className="ml-4 font-semibold mb-3">{restaurantInfo.sla.minDeliveryTime} - {restaurantInfo.sla.maxDeliveryTime} mins</div>
                     </div>
 
-                    {/*----------------------Menu Items----------------------------- */}
-                                      
-
-                    {/* .length function used */}
-                    {/* menujson?.data?.cards[MENU_INDEX]?.groupedCard?.cardGroupMap?.REGULAR?.cards[1]?.card?.card?.carousel?.length */}
+                    {/*Listing Menu Items with a ternary condition */}
+                                    
                     {menuInfo?.cards[1]?.card?.card?.carousel?.length > 0 ? 
                     (menuInfo?.cards[2]?.card?.card?.itemCards.map((item) => (
                         (item.card.info.price > 0 ? <Menuitem key={item.card.info.id}
@@ -116,10 +104,6 @@ export default function Menu(){
                             imageId={item.card.info.imageId}
                         />
                     )))) }
-
-                    
-
-                    {/* defaultPrice */}
                 </div>
             </div>
         </div>
