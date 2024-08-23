@@ -1,5 +1,5 @@
 import Cards from "./Cards";
-import CDN_URL from "../utils/constants";
+import CDN_URL, { RESTAURANT_URL } from "../utils/constants";
 import { useState } from "react";
 import { useEffect } from "react";
 import Skeleton from "./Skeleton";
@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 
 export default function Body() {
 
-    const [resNumber, setResNumber] = useState([]);
+    const [resInfo, setResInfo] = useState([]);
     const [filteredRestaurant, setFilteredRestaurant] = useState([]);
     const [searchText, setSearchText] = useState("");
 
@@ -16,18 +16,16 @@ export default function Body() {
     }, [])
 
     const fetchData = async () => {
-        const data = await fetch(
-            "https://www.swiggy.com/dapi/restaurants/list/v5?lat=12.96340&lng=77.58550&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING"
-        );
+        const data = await fetch(RESTAURANT_URL);
         const apijson = await data.json();
-        setResNumber(apijson.data.cards[4].card.card.gridElements.infoWithStyle.restaurants);
+        setResInfo(apijson.data.cards[4].card.card.gridElements.infoWithStyle.restaurants);
         setFilteredRestaurant(apijson.data.cards[4].card.card.gridElements.infoWithStyle.restaurants);
     }
     
 
     function handleFilter(){
         console.log("Filter was Clicked");
-        const filteredList = resNumber.filter(
+        const filteredList = resInfo.filter(
             (restaurant) => restaurant.info?.avgRating > 4.4
         );
         setFilteredRestaurant(filteredList);      
@@ -41,14 +39,14 @@ export default function Body() {
     function handleSearch(e){
         e.preventDefault();
         console.log(searchText);
-        const filteredRestaurants = resNumber.filter((restaurant) =>
+        const filteredRestaurants = resInfo.filter((restaurant) =>
             restaurant.info.name.toLowerCase().includes(searchText.toLowerCase())
         )
 
         setFilteredRestaurant(filteredRestaurants);
     }
 
-    if(resNumber.length ===0){
+    if(resInfo.length ===0){
         return <Skeleton />
     }
     else{

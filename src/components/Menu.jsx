@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
 import Menuitem from "./Menuitem";
 import Exocard from "./Exocard";
-import {MENU_INDEX, RESTAURANT_INFO_INDEX, RESTAURANT_URL} from "../utils/constants";
 import { useParams } from "react-router-dom";
+// import useRestaurantInfo from "../utils/useRestaurantInfo"
+import { useEffect, useState } from "react";
+import { MENU_INDEX, RESTAURANT_INFO_INDEX, RESTAURANTINFO_URL } from "../utils/constants";
 
 export default function Menu(){
 
@@ -12,33 +13,21 @@ export default function Menu(){
     const [restaurantInfo, setRestaurantInfo] = useState([]);
     const [menuInfo, setMenuInfo] = useState([]);
 
-    //useEffect uses synchronous function --> never use async function as it may delay the value updation --> if used use a wrapper function to call it again
-    //if using async function wrap it with other fetch.
+
     useEffect(() => {
-        // fetchData();
         fetchMenu();
     },[])
 
-    //fetch call updates the value after exiting the function --> Earlier value of resInfo is empty --> wait till function is exited
+   
     const fetchMenu = async () => {
-        const data = await fetch(
-            RESTAURANT_URL + resId
-            );
-        
-        console.log(RESTAURANT_URL + resId);
+        const data = await fetch(RESTAURANTINFO_URL + resId);
         const menujson = await data.json();
-        console.log("menu Json =", menujson);
         setRestaurantInfo(menujson?.data?.cards[RESTAURANT_INFO_INDEX]?.card?.card?.info);
-        console.log("Restaurant Info = ", menujson?.data?.cards[RESTAURANT_INFO_INDEX]?.card?.card?.info );
         setMenuInfo(menujson?.data?.cards[MENU_INDEX]?.groupedCard?.cardGroupMap?.REGULAR);
-        console.log("REGULAR = ",menujson?.data?.cards[MENU_INDEX]?.groupedCard?.cardGroupMap?.REGULAR);
-        console.log("carousal = ",menujson?.data?.cards[MENU_INDEX]?.groupedCard?.cardGroupMap?.REGULAR?.cards[1]?.card?.card?.carousel );
-        console.log("Items Card in Carousel Restaurant ",menujson?.data?.cards[MENU_INDEX]?.groupedCard?.cardGroupMap?.REGULAR?.cards[2]?.card?.card?.itemCards );
-
-        if(menujson?.data?.cards[MENU_INDEX]?.groupedCard?.cardGroupMap?.REGULAR?.cards[1]?.card?.card?.carousel?.length > 0 ? 
-            console.log("Carousal Present = ",menujson?.data?.cards[MENU_INDEX]?.groupedCard?.cardGroupMap?.REGULAR?.cards[2]?.card?.card?.itemCards) : 
-            console.log("Carousel Absent = ", menujson?.data?.cards[MENU_INDEX]?.groupedCard?.cardGroupMap?.REGULAR?.cards[1]?.card?.card?.itemCards));
     }   
+
+    // const [restaurantInfo, menuInfo] = useRestaurantInfo(resId);
+    // console.log("restaurantInfo = ", restaurantInfo);
     
     const {name, avgRating, costForTwoMessage, totalRatingsString, cuisines, areaName} = restaurantInfo;   
 
