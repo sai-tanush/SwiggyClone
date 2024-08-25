@@ -1,6 +1,8 @@
 import { MENU_URL } from "../utils/constants"
 
-export default function Menuitem({name, price, rating, votes, description, imageId}){
+export default function Menuitem({info}){
+    const {name, price, ratings, description, imageId} = info;
+    console.log("Menu item rendered!");
     return(
         <>  
             {/* Outer div with left side(content) and right side(image) in flex ✅*/}
@@ -9,7 +11,7 @@ export default function Menuitem({name, price, rating, votes, description, image
                 <div className="w-3/5 mt-5 ml-4 flex flex-col flex-wrap">
                     <p className="text-xl font-bold">{name}</p>
                     <p className="text-lg font-semibold">₹{price/100}</p>
-                    <p className="text-md font-semibold">{rating}{'('}{votes}{')'}</p>
+                    <p className="text-md font-semibold">{ratings.aggregatedRating.rating}{'('}{ratings.aggregatedRating.ratingCount}{')'}</p>
                     <p className="text-slate-700">{description}</p>
                 </div>
                 {/* Right side Image position fixed ✅  */}
