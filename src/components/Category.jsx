@@ -1,15 +1,14 @@
 import { useState } from "react";
 import Menuitem from "./Menuitem";
+export default function Category({data, showIndex, setShowIndex, index}){
 
-export default function Category({data}){
+    const [count, setCount] = useState(0);
 
-console.log("data passed = ", data);
-const [categoryItems, setCategoryItems] = useState(false)
-
-function handleClick(e){
-    e.preventDefault();
-    setCategoryItems(!categoryItems);
-    console.log("categoryItems button = ", categoryItems);
+function handleClick(){    
+    console.log("Button was Clicked!");
+    console.log("showItems value = ", showIndex);
+    setCount(count + 1);
+    count%2 == 0 ? setShowIndex(index) : setShowIndex(null);    
 }
 
     return(
@@ -18,12 +17,12 @@ function handleClick(e){
 
         <div className="flex justify-between">
             <div className="ml-3 mt-2">{data.title} ({data.itemCards.length})</div>
-            <div className="mr-3 mt-2" onClick={handleClick}>
-                {categoryItems ? "⬆️" : "🔽"}
+            <div className="mr-3 mt-2 cursor-pointer" onClick={handleClick}>
+                {showIndex ? "⬆️" : "🔽"}
             </div>
         </div>           
 
-        {categoryItems && data?.itemCards.map((item) =>{
+        {showIndex && data?.itemCards.map((item) =>{
                 return <Menuitem key={item?.card?.info?.id} info={item?.card?.info} />
             })}
 

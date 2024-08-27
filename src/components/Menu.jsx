@@ -1,22 +1,21 @@
-import Menuitem from "./Menuitem";
 import Exocard from "./Exocard";
 import { useParams } from "react-router-dom";
-// import useRestaurantInfo from "../utils/useRestaurantInfo"
+import Category from "./Category";
 import { useEffect, useState } from "react";
 import {
     MENU_INDEX,
   RESTAURANT_INFO_INDEX,
   RESTAURANTINFO_URL,
 } from "../utils/constants";
-import Category from "./Category";
+
 
 export default function Menu() {
   const { resId } = useParams();
-
   const [restaurantInfo, setRestaurantInfo] = useState([]);
   const [menuItems, setMenuItems] = useState([]);
   const [categoryItems, setCategoryItems] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showIndex, setShowIndex] = useState(null);
 
   useEffect(() => {
     fetchMenu();
@@ -116,33 +115,17 @@ export default function Menu() {
             <Category name="Recommended" itemsLength={11}/>
           </div> */}
 
-          {categoryItems.map((item) => {
-           return <Category key={item?.card?.card?.title} data={item?.card?.card} />
+          {categoryItems.map((item, index) => {
+           return <Category key={item?.card?.card?.title} data={item?.card?.card}
+                    showIndex = {index === showIndex ? true : false}
+                    setShowIndex= {setShowIndex}
+                    index={index}
+                    />
           })}
 
-          {/*Listing Menu Items with a ternary condition */}
-          {/* Not optimised code] */}
-
-          {/* {menuInfo?.cards[1]?.card?.card?.carousel?.length > 0   carousel cond --> ret cards[2] --> else crds[1] cond --> return cards[7]
-            ? menuInfo?.cards[2]?.card?.card?.itemCards.map((item) =>
-                item.card.info.price > 0 ? (
-                  <Menuitem key={item.card.info.id} info={item.card.info} />
-                ) : (
-                  <Menuitem key={item.card.info.id} info={item.card.info} />
-                )
-              )
-            : menuInfo?.cards[1]?.card?.card?.itemCards.length > 0
-            ? menuInfo?.cards[1]?.card?.card?.itemCards.map((item) => (
-                <Menuitem key={item.card.info.id} info={item.card.info} />
-              ))
-            : menuInfo?.cards[7]?.card?.card?.itemCards.map((item) => (
-                <Menuitem key={item.card.info.id} info={item.card.info} />
-              ))} */}
-
-          {/* { --> check syntax for arrow function, return not required if ( are used) 
-          if {used}  --> return is required in map function*/}
+          {/* {console.log("setShowIndex = ", setShowIndex)}
           {menuItems.map((item) => <Menuitem key={item.card.info.id} info={item.card.info} />
-          )}
+          )} */}
         </div>
       </div>
     </div>

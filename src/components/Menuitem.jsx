@@ -11,7 +11,6 @@ export default function Menuitem({info}){
         setDescriptionExpanded(!descriptionExpanded);
     }
 
-    console.log(`Item name = ${info.name},Description= ${info.description}, Item Description Length = ${info.description.length} `)
     const {name, price, ratings, imageId} = info;
     return(
         <>  
