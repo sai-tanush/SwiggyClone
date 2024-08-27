@@ -8,13 +8,14 @@ import {
   RESTAURANT_INFO_INDEX,
   RESTAURANTINFO_URL,
 } from "../utils/constants";
+import Category from "./Category";
 
 export default function Menu() {
   const { resId } = useParams();
-  console.log(resId);
 
   const [restaurantInfo, setRestaurantInfo] = useState([]);
   const [menuItems, setMenuItems] = useState([]);
+  const [categoryItems, setCategoryItems] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -31,39 +32,45 @@ export default function Menu() {
       //menujson?.data?.cards[MENU_INDEX]?.groupedCard?.cardGroupMap?.REGULAR
       getItemCards(menujson)
     );
+
+    //setCategoryItems(menujson?.data?.cards[MENU_INDEX]?.groupedCard?.cardGroupMap?.REGULAR?.cards)
+    setCategoryItems(
+      getCategory(menujson)
+    );
+
+    
     setLoading(false);
+    console.log("menujson = ", menujson);
+
+    //setting categories value to a variable
+    //const categories = menujson?.data?.cards[MENU_INDEX]?.groupedCard?.cardGroupMap?.REGULAR?.cards;
+    //console.log("All categories cards = ", categories);
   };
 
-  console.log("menuItems = ", menuItems);
-
-  // const [restaurantInfo, menuInfo] = useRestaurantInfo(resId);
-  // console.log("restaurantInfo = ", restaurantInfo);
-
-  //return --> right item Cards(menujson)
-
-//carousel cond --> ret cards[2] --> else crds[1] cond --> return cards[7]
-
-//menuInfo?.cards[2]?.card?.card?.itemCards
   function getItemCards(menujson){
+    console.log("getItemCards was called!");
     const menu = menujson?.data?.cards[MENU_INDEX]?.groupedCard?.cardGroupMap?.REGULAR;
-    // if(menu?.cards[1]?.card?.card?.carousel?.length == 0){
-    //       if(menu?.menuInfo?.cards[1]?.card?.card?.itemCards.length > 0){
-    //         return menu?.menuInfo?.cards[1]?.card?.card?.itemCards
-    //       }
-    //       else if(menu?.menuInfo?.cards[1]?.card?.card?.itemCards.length == 0){
-    //         return (menu?.menuInfo?.cards[7]?.card?.card?.itemCards)
-    //       }
-    //     return (menu?.menuInfo?.cards[2]?.card?.card?.itemCards)           
-    // } 
-    // return menu?.menuInfo?.cards[2]?.card?.card?.itemCards;
-
-
     return menu?.cards[1]?.card?.card?.carousel?.length > 0 
         ?  (menu?.cards[2]?.card?.card?.itemCards)//carousel present          
         : menu?.cards[1]?.card?.card?.itemCards.length > 0
         ?  (menu?.cards[1]?.card?.card?.itemCards) //menu layers present
         :  (menu?.cards[7]?.card?.card?.itemCards) //menu layer absent
   }
+
+  console.log("menuItems = ",menuItems);
+
+  //setting the categories/filtering the cards with category
+  function getCategory(menujson){
+    console.log("getCategory was called");    
+    console.log("menujson inside getCategory = ", menujson);
+    console.log("menujson length = ", menujson?.data?.length);
+    const categories = menujson?.data?.cards[MENU_INDEX]?.groupedCard?.cardGroupMap?.REGULAR?.cards.filter((item) => 
+      item?.card?.card?.['@type'] === "type.googleapis.com/swiggy.presentation.food.v2.ItemCategory"
+    )
+    console.log("categories = ",categories);
+
+    return categories;
+  }  
 
   const {
     name,
@@ -73,11 +80,6 @@ export default function Menu() {
     cuisines,
     areaName,
   } = restaurantInfo;
-
-  //   return(
-  //     {if(loading === true)<Exocard />}
-  //   )
-
 
   //use shimmer ui assoiciated with api fetch not ternary operator
   if (loading) {
@@ -109,6 +111,14 @@ export default function Menu() {
               {restaurantInfo.sla.maxDeliveryTime} mins
             </div>
           </div>
+
+          {/* <div className="mt-3">
+            <Category name="Recommended" itemsLength={11}/>
+          </div> */}
+
+          {categoryItems.map((item) => {
+           return <Category key={item?.card?.card?.title} data={item?.card?.card} />
+          })}
 
           {/*Listing Menu Items with a ternary condition */}
           {/* Not optimised code] */}
