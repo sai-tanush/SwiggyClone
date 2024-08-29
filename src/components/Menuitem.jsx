@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { DESCRIPTION_MAX_LENGTH, MENU_URL } from "../utils/constants"
+import { useDispatch } from "react-redux";
+import { addItem } from "../utils/cartSlice";
 
 export default function Menuitem({info}){
 
@@ -7,14 +9,21 @@ export default function Menuitem({info}){
 
     const showDescription = descriptionExpanded ? info.description : info.description.substring(0, 150) + "...";
 
+    const dispatch = useDispatch();
+
     function descriptionToggle(){
         setDescriptionExpanded(!descriptionExpanded);
     }
 
-    const {name, price, ratings, imageId} = info;
+    function handleAddItem(info){
+        //Dispatch an Action
+        dispatch(addItem(info));
+    }
+
+    const {name, ratings, imageId, price, defaultPrice} = info;
+    
     return(
-        <>  
-        
+        <> 
             {/* Outer div with left side(content) and right side(image) in flex ✅*/}
             <div className="w-full h-auto flex justify-between mt-[2rem] mb-1 border border-slate-400 
             rounded-xl shadow-xl">
@@ -34,7 +43,7 @@ export default function Menuitem({info}){
                 }
                     
                     <p className="text-xl font-bold">{name}</p>
-                    <p className="text-lg font-semibold">₹{price/100}</p>
+                    <p className="text-lg font-semibold">₹{(price || defaultPrice)/100}</p>
                     <p className="text-md font-semibold flex text-sm"><svg xmlns="http://www.w3.org/2000/svg" 
                         fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" 
                         className="size-5 mt-1 text-green-600 fill-current">
@@ -47,8 +56,7 @@ export default function Menuitem({info}){
                     {info.description.length > DESCRIPTION_MAX_LENGTH && (
                         <button onClick={descriptionToggle}
                         ><span className="text-sky-600">{!descriptionExpanded ? "Read More" : "Read Less"}</span></button>
-                    )}</p>
-                    
+                    )}</p>                    
                 </div>
                 {/* Right side Image position fixed ✅  */}
                 <div className="w-2/5 mt-3 mb-7 mr-3 flex flex-col justify-center items-center">
@@ -56,7 +64,8 @@ export default function Menuitem({info}){
                     className="w-[9rem] h-[9rem] mr-[-6rem] object-cover rounded-3xl" />
                     {/* Button position absolute, to be placed at the bottom of the image */}
                     <button className=" w-[6rem] h-[2rem] text-center ml-[6rem] bg-slate-50 
-                    border border-slate-400 rounded-2xl hover:bg-slate-300">
+                    border border-slate-400 rounded-2xl hover:bg-slate-300"
+                    onClick={() => handleAddItem(info)}>
                         <span className="text-green-500">ADD</span>
                     </button>
                 </div>

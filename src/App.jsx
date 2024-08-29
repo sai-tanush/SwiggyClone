@@ -7,23 +7,27 @@ import Help from "./components/Help"
 import Cart from "./components/Cart"
 import Menu from "./components/Menu"
 import About from "./components/About"
+import { Provider } from "react-redux"
+import appStore from "./utils/appStore"
 
 function App() {
 
   return (
     <>
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<Body />}/>
-        <Route path="/home" element={<Body />}/>
-        <Route path="/about" element={<About />}/>
-        <Route path="/swiggycorporate" element={<Corporate />} />
-        <Route path="/offers" element={<Offers />} />
-        <Route path="/help" element={<Help />} />
-        <Route path="/cart" element={<Cart />} />
-        <Route path="*" element={<Body />} />
-        <Route path="/restaurants/:resId" element={<Menu />} />
-      </Routes>      
+      <Provider store={appStore} >
+        <Navbar />
+        <Routes>
+            <Route path="/" element={<Body />}/>
+            <Route path="/home" element={<Body />}/>
+            <Route path="/about" element={<About />}/>
+            <Route path="/swiggycorporate" element={<Corporate />} />
+            <Route path="/offers" element={<Offers />} />
+            <Route path="/help" element={<Help />} />
+            <Route path="/cart" element={<Cart />} />
+            <Route path="*" element={<Body />} />
+            <Route path="/restaurants/:resId" element={<Menu />} />
+        </Routes>
+      </Provider>      
     </>
   )
 }
