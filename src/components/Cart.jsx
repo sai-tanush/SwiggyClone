@@ -10,10 +10,9 @@ export default function Cart(){
 
     function handleClearCart(){
         dispatch(clearCart());
-    }
-    
+    }    
     return(
-        <>  
+        <>
             <div className="w-6/12 min-h-screen flex flex-col mx-auto bg-slate-200">
                 <h1 className="text-3xl font-bold mt-2 mb-5 mx-auto">Cart</h1>
                 {cartItems.length > 0 && <div>
@@ -26,7 +25,7 @@ export default function Cart(){
                 Clear Cart</button>
                 <div>
                 {cartItems.map((item) => (
-                    <CartItem key={item.name} info={item} />
+                    <CartItem key={item.id} info={item} />
                 ))}
                 </div>
                 

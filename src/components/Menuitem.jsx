@@ -1,13 +1,19 @@
 import { useState } from "react";
 import { DESCRIPTION_MAX_LENGTH, MENU_URL } from "../utils/constants"
 import { useDispatch } from "react-redux";
-import { addItem } from "../utils/cartSlice";
+import { addItem, addAmount } from "../utils/cartSlice";
 
 export default function Menuitem({info}){
 
     const [descriptionExpanded, setDescriptionExpanded] = useState(false);
+    let desc = 0;
+    console.log("info at Menu = ", info);
+    console.log("Description at Menu = ", info.description);
+    //const showDescription = descriptionExpanded ? info.description : info.description.substring(0, 150) + "...";
 
-    const showDescription = descriptionExpanded ? info.description : info.description.substring(0, 150) + "...";
+    if(info.description){
+        desc = 1;
+    }
 
     const dispatch = useDispatch();
 
@@ -18,6 +24,8 @@ export default function Menuitem({info}){
     function handleAddItem(info){
         //Dispatch an Action
         dispatch(addItem(info));
+        dispatch(addAmount((price || defaultPrice)/100));
+        console.log(`price = ${price} defaultPrice=${defaultPrice}`)
     }
 
     const {name, ratings, imageId, price, defaultPrice} = info;
@@ -52,11 +60,11 @@ export default function Menuitem({info}){
                         </svg>
                     <p className="mt-[3px]"><span className="text-green-600">{ratings.aggregatedRating.rating}</span>{'('}
                     {ratings.aggregatedRating.ratingCount}{')'}</p></p>
-                    <p className="text-slate-600 text-sm mb-4">{showDescription} 
-                    {info.description.length > DESCRIPTION_MAX_LENGTH && (
+                    <p className="text-slate-600 text-sm mb-4">{info.description} 
+                    {desc && info.description.length > DESCRIPTION_MAX_LENGTH && (
                         <button onClick={descriptionToggle}
                         ><span className="text-sky-600">{!descriptionExpanded ? "Read More" : "Read Less"}</span></button>
-                    )}</p>                    
+                    )}</p>                   
                 </div>
                 {/* Right side Image position fixed ✅  */}
                 <div className="w-2/5 mt-3 mb-7 mr-3 flex flex-col justify-center items-center">

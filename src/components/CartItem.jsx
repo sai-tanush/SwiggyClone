@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { removeItem } from "../utils/cartSlice";
+import { removeItem, addAmount, removeAmount } from "../utils/cartSlice";
 
 export default function CartItem({ info }) {
   const [itemQuantity, setItemQuantity] = useState(1);
@@ -10,20 +10,23 @@ export default function CartItem({ info }) {
   function handleAddItemQuantity(e) {
     e.preventDefault();
     setItemQuantity(itemQuantity + 1);
+    dispatch(addAmount(((info.price || info.defaultPrice) / 100)));
   }
 
   function handleReduceItemQuantity(e) {
     e.preventDefault();
-    if (itemQuantity > 0) {
+    if (itemQuantity > 1) {
       setItemQuantity(itemQuantity - 1);
     } else {
-      setItemQuantity(0);
+      setItemQuantity(1);
     }
+    dispatch(removeAmount(((info.price || info.defaultPrice) / 100)));
   }
 
   function handleRemoveItem(){
     console.log("handleRemoveItem called!");
     dispatch(removeItem(info));
+    dispatch(removeAmount((info.price || info.defaultPrice) * itemQuantity))
     console.log("CartItems = ", cartItems);
   }
 

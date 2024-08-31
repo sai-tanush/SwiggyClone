@@ -1,11 +1,14 @@
 //import { useState } from "react"
+import { useSelector } from "react-redux";
 import { DELIVERY_FEE, DELIVERY_TIP, EXTRA_DISCOUNT, PLATFORM_FEE } from "../utils/constants";
 
 export default function BillDetails({details}){
 
-    const totalPrice = details.reduce((acc, item) => acc + (item.defaultPrice|| item.price)/100, 0) 
+    const totalPrice = useSelector((store) => store.cart.totalAmount);
 
+    //const totalPrice = details.reduce((acc, item) => acc + (item.defaultPrice|| item.price)/100, 0) 
     console.log("Details inside BillDetails = ", details);
+    console.log("Total Price in Amount[] = ", totalPrice);
 
     const GST = totalPrice * 0.15 + 12;
     const totalBill = totalPrice + DELIVERY_FEE + DELIVERY_TIP - EXTRA_DISCOUNT + PLATFORM_FEE + GST;   
